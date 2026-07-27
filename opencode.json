@@ -1,0 +1,23 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["AGENTS.md", "CLAUDE.md"],
+  "subagent_depth": 2,
+  "permission": {
+    "bash": {
+      "bun run*": "allow",
+      "python salary_lookup.py*": "allow",
+      "python3 salary_lookup.py*": "allow",
+      "pdftotext*": "allow"
+    },
+    "skill": {
+      "*": "allow"
+    },
+    "read": "allow",
+    "edit": "allow",
+    "glob": "allow",
+    "grep": "allow",
+    "webfetch": "allow",
+    "question": "allow",
+    "task": "allow"
+  }
+}

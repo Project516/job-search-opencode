@@ -4,15 +4,21 @@ Step-by-step instructions for getting the AI Job Search framework running.
 
 ## 1. Prerequisites
 
-### Claude Code
+### AI Coding Agent
 
-Install Claude Code (Anthropic's CLI for Claude):
+This framework works with either Claude Code or OpenCode.
 
+**Claude Code:**
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
-
 You'll need an Anthropic API key or a Claude Pro/Team subscription. See the [Claude Code docs](https://docs.anthropic.com/en/docs/claude-code) for details.
+
+**OpenCode:**
+```bash
+curl -fsSL https://opencode.ai/install | bash
+```
+You'll need an API key from one of OpenCode's supported providers. See the [OpenCode docs](https://opencode.ai/docs) for details.
 
 ### Python
 

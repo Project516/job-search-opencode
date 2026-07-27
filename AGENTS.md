@@ -8,7 +8,7 @@ This workspace is structured to manage job search activities, scraper tools, CVs
 
 ## Thin-Pointer Design (Single Source of Truth)
 
-To prevent duplication and configuration drift across different AI agent frameworks (Claude Code, Google Antigravity, Codex, Cursor, Gemini CLI, etc.), this workspace uses a unified thin-pointer design. All agent runtimes should load the canonical specifications and candidate profiles from the files and directories below:
+To prevent duplication and configuration drift across different AI agent frameworks (Claude Code, OpenCode, Google Antigravity, Codex, Cursor, Gemini CLI, etc.), this workspace uses a unified thin-pointer design. All agent runtimes should load the canonical specifications and candidate profiles from the files and directories below:
 
 1. **Personal Candidate Profile:**
    - The candidate profile, contact details, education, and target preferences are defined in [CLAUDE.md](CLAUDE.md) and the individual profile methodology files under [.claude/skills/job-application-assistant/](.claude/skills/job-application-assistant/) (specifically `01-*.md` etc.).
@@ -16,4 +16,8 @@ To prevent duplication and configuration drift across different AI agent framewo
    - The step-by-step instructions and triggers for tasks (setup, scrape, rank, apply, upskill, interview) are defined in the [.claude/](.claude/) directory (specifically under `.claude/skills/` and `.claude/commands/`).
    - Do not duplicate these rules or specifications. Treat `.claude/` files as the single source of truth.
 3. **Portal Search Skills:**
-   - Job-portal search CLIs live under [.agents/skills/](.agents/skills/) in the portable Agent Skills format (with a `SKILL.md` per portal). Codex and Antigravity discover these automatically; the `/scrape` workflow in [.claude/skills/job-scraper/](.claude/skills/job-scraper/) orchestrates them.
+   - Job-portal search CLIs live under [.agents/skills/](.agents/skills/) in the portable Agent Skills format (with a `SKILL.md` per portal). Codex, Antigravity, and OpenCode discover these automatically; the `/scrape` workflow in [.claude/skills/job-scraper/](.claude/skills/job-scraper/) orchestrates them.
+
+## OpenCode Support
+
+OpenCode reads this repo's `AGENTS.md` and `CLAUDE.md` as project rules, and discovers `.claude/skills/`/`.agents/skills/` skills automatically. Slash commands (`/setup`, `/apply`, `/scrape`, etc.) are available via thin wrappers in `.opencode/commands/` — each one loads the canonical spec from `.claude/commands/` or `.claude/skills/`. Permissions are configured in `opencode.json` at the project root. The `.claude/settings.json` file is Claude Code-specific and ignored by OpenCode.

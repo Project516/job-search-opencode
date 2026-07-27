@@ -54,7 +54,7 @@ Claude Code is the reference runtime: it is what the maintainer runs daily and w
 
 What upstream maintains for other runtimes instead:
 
-- The portal search skills in `.agents/skills/` use the portable Agent Skills format (`SKILL.md` per portal) and are auto-discovered by Codex and Antigravity today.
+- The portal search skills in `.agents/skills/` use the portable Agent Skills format (`SKILL.md` per portal) and are auto-discovered by Codex, Antigravity, and OpenCode today.
 - The root `AGENTS.md` points any agent at the canonical workflow specs and the profile entry point.
 - Framework instruction files carry `framework_version` markers, so a runtime fork can track methodology changes precisely (`python3 tools/check_upstream_updates.py`).
 

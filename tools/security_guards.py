@@ -41,6 +41,15 @@ ALLOWED_PERMISSIONS = {
     "Bash(pdftotext:*)",
 }
 
+# Canonical OpenCode bash globs (opencode.json). A PR that adds or changes
+# an entry must add it here too.
+ALLOWED_OPENCODE_BASH_GLOBS = {
+    "bun run*",
+    "python salary_lookup.py*",
+    "python3 salary_lookup.py*",
+    "pdftotext*",
+}
+
 # Personal-data ignore rules that must never disappear from .gitignore.
 REQUIRED_IGNORE_RULES = [
     "salary_data.json",
@@ -169,16 +178,47 @@ def check_package_manifests() -> None:
             )
 
 
+def check_opencode_permissions() -> None:
+    path = ROOT / "opencode.json"
+    if not path.exists():
+        return  # optional; only check when present
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        errors.append(f"opencode.json: unreadable or invalid JSON: {exc}")
+        return
+    if not isinstance(data, dict):
+        errors.append("opencode.json: top-level JSON value must be an object")
+        return
+    bash_perms = data.get("permission", {}).get("bash", {})
+    if not isinstance(bash_perms, dict):
+        return  # no bash permissions – nothing to check
+    for key in bash_perms:
+        if key == "*":
+            errors.append(
+                "opencode.json: wildcard bash permission '*' is not in the reviewed allowlist. "
+                "OpenCode bash permissions apply without prompting; widening to '*' allows every "
+                "command unconditionally."
+            )
+        elif key not in ALLOWED_OPENCODE_BASH_GLOBS:
+            errors.append(
+                f"opencode.json: bash permission {key!r} not in the reviewed allowlist. "
+                "Pre-approved bash commands run without prompting on every fork. If this entry is "
+                "intentional, add it to ALLOWED_OPENCODE_BASH_GLOBS in tools/security_guards.py."
+            )
+
+
 def main() -> int:
     check_permissions()
     check_gitignore()
     check_package_manifests()
+    check_opencode_permissions()
     if errors:
         print(f"security_guards: {len(errors)} failure(s)")
         for err in errors:
             print(f"  - {err}")
         return 1
-    print("security_guards: OK (permissions allowlist, gitignore rules, package manifests)")
+    print("security_guards: OK (permissions allowlist, gitignore rules, package manifests, opencode.json)")
     return 0
 
 
